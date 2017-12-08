@@ -47,7 +47,7 @@ import vos.Video;
 public class AllVideosMDB implements MessageListener, ExceptionListener 
 {
 	public final static int TIME_OUT = 10;
-	private final static String APP = "app2";
+	private final static String APP = "app1";
 	
 	private final static String GLOBAL_TOPIC_NAME = "java:global/RMQTopicAllProductos";
 	private final static String LOCAL_TOPIC_NAME = "java:global/RMQAllProductosLocal";
@@ -121,7 +121,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		System.out.println(id);
-		ExchangeMsg msg = new ExchangeMsg("Productos.general.app2", APP, payload, status, id);
+		ExchangeMsg msg = new ExchangeMsg("Productos.general."+APP, APP, payload, status, id);
 		TopicPublisher topicPublisher = topicSession.createPublisher(dest);
 		topicPublisher.setDeliveryMode(DeliveryMode.PERSISTENT);
 		TextMessage txtMsg = topicSession.createTextMessage();

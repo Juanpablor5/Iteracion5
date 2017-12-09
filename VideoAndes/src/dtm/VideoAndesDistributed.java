@@ -2,6 +2,7 @@ package dtm;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.jms.JMSException;
 import javax.jms.Queue;
@@ -26,6 +27,7 @@ import jms.AllVideosMDB;
 import jms.NonReplyException;
 import tm.VideoAndesMaster;
 import vos.ListaVideos;
+import vos.Producto;
 
 public class VideoAndesDistributed 
 {
@@ -107,12 +109,12 @@ public class VideoAndesDistributed
 		return getInstance(tm);
 	}
 	
-	public ListaVideos getLocalVideos() throws Exception
+	public List<Producto> getLocalProductos() throws Exception
 	{
 		return tm.darVideosLocal();
 	}
 	
-	public ListaVideos getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public List<Producto> getRemoteProductos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		return allVideosMQ.getRemoteVideos();
 	}

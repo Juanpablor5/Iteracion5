@@ -4,7 +4,7 @@
  * Departamento de Ingeniería de Sistemas y Computación
  *
  * Materia: Sistemas Transaccionales
- * Ejercicio: VideoAndes
+ * Ejercicio: ProductoAndes
  * Autor: Juan Felipe García - jf.garcia268@uniandes.edu.co
  * -------------------------------------------------------------------
  */
@@ -17,13 +17,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import vos.Video;
+import vos.Producto;
+import vos.Producto;
 
 /**
  * Clase DAO que se conecta la base de datos usando JDBC para resolver los requerimientos de la aplicación
  * @author Juan
  */
-public class DAOTablaVideos {
+public class DAOTablaProductos {
 
 
 	/**
@@ -37,10 +38,10 @@ public class DAOTablaVideos {
 	private Connection conn;
 
 	/**
-	 * Método constructor que crea DAOVideo
+	 * Método constructor que crea DAOProducto
 	 * <b>post: </b> Crea la instancia del DAO e inicializa el Arraylist de recursos
 	 */
-	public DAOTablaVideos() {
+	public DAOTablaProductos() {
 		recursos = new ArrayList<Object>();
 	}
 
@@ -75,10 +76,10 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Video> darVideos() throws SQLException, Exception {
+	public ArrayList<Producto> darProductos() throws SQLException, Exception {
 		
-		ArrayList<Video> videos = new ArrayList<Video>();
-		videos.add(new Video(20, "Prueba 2", 20));
+		ArrayList<Producto> videos = new ArrayList<Producto>();
+		videos.add(new Producto(20, "Prueba 2", 20));
 		return videos;
 	}
 
@@ -89,8 +90,8 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Video> buscarVideosPorName(String name) throws SQLException, Exception {
-		ArrayList<Video> videos = new ArrayList<Video>();
+	public ArrayList<Producto> buscarProductosPorName(String name) throws SQLException, Exception {
+		ArrayList<Producto> videos = new ArrayList<Producto>();
 
 		String sql = "SELECT * FROM ISIS2304MO11620.VIDEOS WHERE NAME ='" + name + "'";
 
@@ -104,7 +105,7 @@ public class DAOTablaVideos {
 			String name2 = rs.getString("NAME");
 			int id = Integer.parseInt(rs.getString("ID"));
 			int duration = Integer.parseInt(rs.getString("DURATION"));
-			videos.add(new Video(id, name2, duration));
+			videos.add(new Producto(id, name2, duration));
 		}
 
 		return videos;
@@ -118,7 +119,7 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo agregar el video a la base de datos
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void addVideo(Video video) throws SQLException, Exception {
+	public void addProducto(Producto video) throws SQLException, Exception {
 
 		String sql = "INSERT INTO ISIS2304MO11620.VIDEOS VALUES (";
 		sql += video.getId() + ",'";
@@ -141,7 +142,7 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void updateVideo(Video video) throws SQLException, Exception {
+	public void updateProducto(Producto video) throws SQLException, Exception {
 
 		String sql = "UPDATE ISIS2304MO11620.VIDEOS SET ";
 		sql += "name='" + video.getName() + "',";
@@ -163,7 +164,7 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void deleteVideo(Video video) throws SQLException, Exception {
+	public void deleteProducto(Producto video) throws SQLException, Exception {
 
 		String sql = "DELETE FROM ISIS2304MO11620.VIDEOS";
 		sql += " WHERE id = " + video.getId();
@@ -181,8 +182,8 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Video> darVideoMasAlquilado()  throws SQLException, Exception {
-		ArrayList<Video> videos = new ArrayList<Video>();
+	public ArrayList<Producto> darProductoMasAlquilado()  throws SQLException, Exception {
+		ArrayList<Producto> videos = new ArrayList<Producto>();
 
 		String sql = "SELECT * " +
 					 "FROM ISIS2304MO11620.VIDEOS " +
@@ -203,7 +204,7 @@ public class DAOTablaVideos {
 			String name = rs.getString("NAME");
 			int id = Integer.parseInt(rs.getString("ID"));
 			int duration = Integer.parseInt(rs.getString("DURATION"));
-			videos.add(new Video(id, name, duration));
+			videos.add(new Producto(id, name, duration));
 		}
 
 		return videos;

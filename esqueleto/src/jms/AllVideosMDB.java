@@ -40,9 +40,7 @@ import com.rabbitmq.jms.admin.RMQDestination;
 
 import dtm.VideoAndesDistributed;
 import vos.ExchangeMsg;
-import vos.ListaVideos;
-import vos.Video;
-
+import vos.Productoi;
 
 public class AllVideosMDB implements MessageListener, ExceptionListener 
 {
@@ -60,7 +58,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 	private Topic globalTopic;
 	private Topic localTopic;
 	
-	private List<Video> answer = new ArrayList<Video>();
+	private List<Productoi> answer = new ArrayList<Productoi>();
 	
 	public AllVideosMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
 	{	
@@ -86,7 +84,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 		topicConnection.close();
 	}
 	
-	public ListaVideos getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public List<Productoi> getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		answer.clear();
 		String id = APP+""+System.currentTimeMillis();
@@ -112,8 +110,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 		
 		if(answer.isEmpty())
 			throw new NonReplyException("Non Response");
-		ListaVideos res = new ListaVideos(answer);
-        return res;
+        return answer;
 	}
 	
 	
@@ -150,35 +147,25 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 				if(ex.getStatus().equals(REQUEST))
 				{
 					VideoAndesDistributed dtm = VideoAndesDistributed.getInstance();
-					ListaVideos videos = dtm.getLocalVideos();
+					List<Productoi> videos = dtm.getLocalProductos();
 					String payload = mapper.writeValueAsString(videos);
 					Topic t = new RMQDestination("", "Productos.test", ex.getRoutingKey(), "", false);
 					sendMessage(payload, REQUEST_ANSWER, t, id);
 				}
 				else if(ex.getStatus().equals(REQUEST_ANSWER))
 				{
-					ListaVideos v = mapper.readValue(ex.getPayload(), ListaVideos.class);
-					answer.addAll(v.getVideos());
+					List<Productoi> v = mapper.readValue(ex.getPayload(), List.class);
+					answer.addAll(v);
 				}
 			}
 			
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
+		} catch (JMSException|JsonParseException|JsonMappingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
@@ -186,5 +173,4 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 	{
 		System.out.println(exception);
 	}
-
 }

@@ -26,7 +26,6 @@ import com.rabbitmq.jms.admin.RMQDestination;
 import jms.AllVideosMDB;
 import jms.NonReplyException;
 import tm.VideoAndesMaster;
-import vos.ListaVideos;
 import vos.Producto;
 
 public class VideoAndesDistributed 

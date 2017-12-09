@@ -46,8 +46,8 @@ import vos.Video;
 
 public class AllVideosMDB implements MessageListener, ExceptionListener 
 {
-	public final static int TIME_OUT = 10;
-	private final static String APP = "app1";
+	public final static int TIME_OUT = 3;
+	private final static String APP = "app2";
 	
 	private final static String GLOBAL_TOPIC_NAME = "java:global/RMQTopicAllProductos";
 	private final static String LOCAL_TOPIC_NAME = "java:global/RMQAllProductosLocal";

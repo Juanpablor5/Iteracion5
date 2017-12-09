@@ -318,10 +318,10 @@
                     <environment>
                         <property name="className" value="javax.jms.Queue"/>
                         <property name="amqp" value="true"/>
-                        <property name="amqpExchangeName" value="app1"/>
-                        <property name="amqpRoutingKey" value="app1"/>
-                        <property name="amqpQueueName" value="app1"/>
-                        <property name="destinationName" value="app1"/>
+                        <property name="amqpExchangeName" value="app2"/>
+                        <property name="amqpRoutingKey" value="app2"/>
+                        <property name="amqpQueueName" value="app2"/>
+                        <property name="destinationName" value="app2"/>
                     </environment>
                 </object-factory>
                 <object-factory name="java:global/RMQTopicAllProductos" module="com.rabbitmq" class="com.rabbitmq.jms.admin.RMQObjectFactory">
@@ -330,8 +330,8 @@
                         <property name="amqp" value="true"/>
                         <property name="amqpExchangeName" value="Productos.test"/>
                         <property name="amqpRoutingKey" value="Productos.general"/>
-                        <property name="amqpQueueName" value="app1"/>
-                        <property name="destinationName" value="app1"/>
+                        <property name="amqpQueueName" value="app2"/>
+                        <property name="destinationName" value="app2"/>
                     </environment>
                 </object-factory>
                 <object-factory name="java:global/RMQAllProductosLocal" module="com.rabbitmq" class="com.rabbitmq.jms.admin.RMQObjectFactory">
@@ -340,8 +340,8 @@
                         <property name="amqp" value="true"/>
                         <property name="amqpExchangeName" value="Productos.test"/>
                         <property name="amqpRoutingKey" value="Productos.general.app3"/>
-                        <property name="amqpQueueName" value="app1"/>
-                        <property name="destinationName" value="app1"/>
+                        <property name="amqpQueueName" value="app2"/>
+                        <property name="destinationName" value="app2"/>
                     </environment>
                 </object-factory>
             </bindings>

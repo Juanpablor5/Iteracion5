@@ -101,7 +101,7 @@ public class AllVideosMDB implements MBD{
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		System.out.println(id);
-		ExchangeMsg msg = new ExchangeMsg("Productos.general.app2", APP, payload, status, id);
+		ExchangeMsg msg = new ExchangeMsg("Productos.general."+APP, APP, payload, status, id);
 		TopicPublisher topicPublisher = topicSession.createPublisher(dest);
 		topicPublisher.setDeliveryMode(DeliveryMode.PERSISTENT);
 		TextMessage txtMsg = topicSession.createTextMessage();

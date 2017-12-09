@@ -4,16 +4,11 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import em.Tabla;
-import em.Columna.SISTRANS_Columna;
-import em.Id.SISTRANS_Id;
-import em.Many.ManytoMany;
 import jdk.nashorn.internal.ir.annotations.Reference;
 
 /**
  * Clase que representa un Ingrediente.
  */
-@Tabla
 public class Ingredientei {
 
 	// -------------------------------------------------------------
@@ -33,7 +28,7 @@ public class Ingredientei {
 	private String traduccion;
 
 	@Reference
-	private List<Producto> productos;
+	private List<Productoi> productos;
 
 	// -------------------------------------------------------------
 	// Constructor
@@ -116,11 +111,11 @@ public class Ingredientei {
 		this.traduccion = traduccion;
 	}
 
-	public List<Producto> getProductos() {
+	public List<Productoi> getProductos() {
 		return productos;
 	}
 
-	public void setProductos(List<Producto> productos) {
+	public void setProductos(List<Productoi> productos) {
 		this.productos = productos;
 	}
 }

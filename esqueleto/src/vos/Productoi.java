@@ -4,17 +4,10 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import em.Checks;
-import em.Tabla;
-import em.Check.SISTRANS_Check;
-import em.Columna.SISTRANS_Columna;
-import em.Id.SISTRANS_Id;
-import em.Many.ManytoMany;
 
 /**
  * Clase que representa un Producto.
  */
-@Tabla
 public class Productoi {
 
 	// -------------------------------------------------------------
@@ -37,8 +30,7 @@ public class Productoi {
 
 	private String categoria;
 	
-	@ManytoMany(mapped="productos")
-	private List<Ingrediente> ingredientes;
+	private List<Ingredientei> ingredientes;
 	// -------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------
@@ -151,11 +143,11 @@ public class Productoi {
 		this.tiempoPreparacion = tiempoPreparacion;
 	}
 
-	public List<Ingrediente> getIngredientes() {
+	public List<Ingredientei> getIngredientes() {
 		return ingredientes;
 	}
 
-	public void setIngredientes(List<Ingrediente> ingredientes) {
+	public void setIngredientes(List<Ingredientei> ingredientes) {
 		this.ingredientes = ingredientes;
 	}
 

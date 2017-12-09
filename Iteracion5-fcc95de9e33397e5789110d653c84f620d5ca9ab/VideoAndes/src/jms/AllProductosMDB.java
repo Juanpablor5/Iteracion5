@@ -27,11 +27,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.rabbitmq.jms.admin.RMQDestination;
 import dtm.RotondAndesDistributed;
 import vos.ExchangeMsg;
-import vos.ListaVideos;
-import vos.Video;
+import vos.ListaProducto;
+import vos.Producto;
 
 
-public class AllVideosMDB implements MBD{	
+public class AllProductosMDB implements MBD{	
 	private final static String GLOBAL_TOPIC_NAME = "java:global/RMQTopicAllProductos";
 	private final static String LOCAL_TOPIC_NAME = "java:global/RMQAllProductosLocal";
 	
@@ -40,9 +40,9 @@ public class AllVideosMDB implements MBD{
 	private Topic globalTopic;
 	private Topic localTopic;
 	
-	private List<Video> answer = new ArrayList<Video>();
+	private List<Producto> answer = new ArrayList<Producto>();
 	
-	public AllVideosMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
+	public AllProductosMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
 	{	
 		topicConnection = factory.createTopicConnection();
 		topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -66,7 +66,7 @@ public class AllVideosMDB implements MBD{
 		topicConnection.close();
 	}
 	
-	public ListaVideos getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public ListaProducto getRemoteProductos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		answer.clear();
 		String id = APP+""+System.currentTimeMillis();
@@ -92,7 +92,7 @@ public class AllVideosMDB implements MBD{
 		
 		if(answer.isEmpty())
 			throw new NonReplyException("Non Response");
-		ListaVideos res = new ListaVideos(answer);
+		ListaProducto res = new ListaProducto(answer);
         return res;
 	}
 	
@@ -130,15 +130,15 @@ public class AllVideosMDB implements MBD{
 				if(ex.getStatus().equals(REQUEST))
 				{
 					RotondAndesDistributed dtm = RotondAndesDistributed.getInstance();
-					ListaVideos videos = dtm.getLocalVideos();
+					ListaProducto videos = dtm.getLocalProductos();
 					String payload = mapper.writeValueAsString(videos);
 					Topic t = new RMQDestination("", "Productos.test", ex.getRoutingKey(), "", false);
 					sendMessage(payload, REQUEST_ANSWER, t, id);
 				}
 				else if(ex.getStatus().equals(REQUEST_ANSWER))
 				{
-					ListaVideos v = mapper.readValue(ex.getPayload(), ListaVideos.class);
-					answer.addAll(v.getVideos());
+					ListaProducto v = mapper.readValue(ex.getPayload(), ListaProducto.class);
+					answer.addAll(v.getProductos());
 				}
 			}
 			

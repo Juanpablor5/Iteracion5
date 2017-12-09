@@ -26,8 +26,7 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import tm.RotondAndesMaster;
-import vos.Video;
-import vos.ListaVideos;
+import vos.ListaProducto;
 
 /**
  * Clase que expone servicios REST con ruta base: http://"ip o nombre de host":8080/VideoAndes/rest/videos/...
@@ -67,11 +66,11 @@ public class VideoAndesVideosServices {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getVideos() {
+	public Response getProductos() {
 		RotondAndesMaster tm = new RotondAndesMaster(getPath());
-		ListaVideos videos;
+		ListaProducto videos;
 		try {
-			videos = tm.darVideos();
+			videos = tm.darProductos();
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}

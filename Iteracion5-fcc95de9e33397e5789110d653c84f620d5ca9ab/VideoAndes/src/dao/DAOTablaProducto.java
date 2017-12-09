@@ -17,13 +17,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import vos.Video;
+import oracle.net.aso.p;
+import vos.Producto;
 
 /**
  * Clase DAO que se conecta la base de datos usando JDBC para resolver los requerimientos de la aplicación
  * @author Juan
  */
-public class DAOTablaVideos {
+public class DAOTablaProducto {
 
 
 	/**
@@ -40,7 +41,7 @@ public class DAOTablaVideos {
 	 * Método constructor que crea DAOVideo
 	 * <b>post: </b> Crea la instancia del DAO e inicializa el Arraylist de recursos
 	 */
-	public DAOTablaVideos() {
+	public DAOTablaProducto() {
 		recursos = new ArrayList<Object>();
 	}
 
@@ -75,11 +76,11 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Video> darVideos() throws SQLException, Exception {
+	public ArrayList<Producto> darProductos() throws SQLException, Exception {
 		
-		ArrayList<Video> videos = new ArrayList<Video>();
-		videos.add(new Video(20, "Prueba 2", 20));
-		return videos;
+		ArrayList<Producto> productos = new ArrayList<Producto>();
+		productos.add(new Producto(20, "Prueba 2", "Desc", "Trad", 20.0));
+		return productos;
 	}
 
 	/**
@@ -89,10 +90,10 @@ public class DAOTablaVideos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Video> buscarVideosPorName(String name) throws SQLException, Exception {
-		ArrayList<Video> videos = new ArrayList<Video>();
+	public ArrayList<Producto> buscarProductosPorName(String name) throws SQLException, Exception {
+		ArrayList<Producto> productos = new ArrayList<Producto>();
 
-		String sql = "SELECT * FROM ISIS2304MO11620.VIDEOS WHERE NAME ='" + name + "'";
+		String sql = "SELECT * FROM PRODUCTO WHERE NAME ='" + name + "'";
 
 		System.out.println("SQL stmt:" + sql);
 
@@ -101,29 +102,33 @@ public class DAOTablaVideos {
 		ResultSet rs = prepStmt.executeQuery();
 
 		while (rs.next()) {
-			String name2 = rs.getString("NAME");
+			String name2 = rs.getString("NOMBRE");
 			int id = Integer.parseInt(rs.getString("ID"));
-			int duration = Integer.parseInt(rs.getString("DURATION"));
-			videos.add(new Video(id, name2, duration));
+			String descripcion = rs.getString("DESCRIPCION");
+			String traduccion = rs.getString("TRADUCCION");
+			Double precio = Double.parseDouble(rs.getString("PRECIO"));
+			productos.add(new Producto(id, name2, descripcion,traduccion,precio));
 		}
 
-		return videos;
+		return productos;
 	}
 
 	/**
 	 * Método que agrega el video que entra como parámetro a la base de datos.
-	 * @param video - el video a agregar. video !=  null
+	 * @param producto - el video a agregar. video !=  null
 	 * <b> post: </b> se ha agregado el video a la base de datos en la transaction actual. pendiente que el video master
 	 * haga commit para que el video baje  a la base de datos.
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo agregar el video a la base de datos
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void addVideo(Video video) throws SQLException, Exception {
+	public void addProducto(Producto producto) throws SQLException, Exception {
 
-		String sql = "INSERT INTO ISIS2304MO11620.VIDEOS VALUES (";
-		sql += video.getId() + ",'";
-		sql += video.getName() + "',";
-		sql += video.getDuration() + ")";
+		String sql = "INSERT INTO PRODUCTO VALUES (";
+		sql += producto.getId() + ",'";
+		sql += producto.getNombre() + "','";
+		sql += producto.getDescripcion() + "','";
+		sql += producto.getTraduccion() + "',";
+		sql += producto.getPrecio() + ")";
 
 		System.out.println("SQL stmt:" + sql);
 
@@ -135,18 +140,20 @@ public class DAOTablaVideos {
 	
 	/**
 	 * Método que actualiza el video que entra como parámetro en la base de datos.
-	 * @param video - el video a actualizar. video !=  null
+	 * @param producto - el video a actualizar. video !=  null
 	 * <b> post: </b> se ha actualizado el video en la base de datos en la transaction actual. pendiente que el video master
 	 * haga commit para que los cambios bajen a la base de datos.
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void updateVideo(Video video) throws SQLException, Exception {
+	public void updateVideo(Producto producto) throws SQLException, Exception {
 
-		String sql = "UPDATE ISIS2304MO11620.VIDEOS SET ";
-		sql += "name='" + video.getName() + "',";
-		sql += "duration=" + video.getDuration();
-		sql += " WHERE id = " + video.getId();
+		String sql = "UPDATE PRODUCTO SET ";
+		sql += "nombre='" + producto.getNombre() + "',";
+		sql += "descripcion='" + producto.getDescripcion() + "',";
+		sql += "traduccion='" + producto.getTraduccion() + "',";
+		sql += "precio=" + producto.getPrecio()+ ",";
+		sql += " WHERE id = " + producto.getId();
 
 		System.out.println("SQL stmt:" + sql);
 
@@ -157,16 +164,16 @@ public class DAOTablaVideos {
 
 	/**
 	 * Método que elimina el video que entra como parámetro en la base de datos.
-	 * @param video - el video a borrar. video !=  null
+	 * @param producto - el video a borrar. video !=  null
 	 * <b> post: </b> se ha borrado el video en la base de datos en la transaction actual. pendiente que el video master
 	 * haga commit para que los cambios bajen a la base de datos.
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void deleteVideo(Video video) throws SQLException, Exception {
+	public void deleteVideo(Producto producto) throws SQLException, Exception {
 
-		String sql = "DELETE FROM ISIS2304MO11620.VIDEOS";
-		sql += " WHERE id = " + video.getId();
+		String sql = "DELETE FROM PRODUCTO";
+		sql += " WHERE id = " + producto.getId();
 
 		System.out.println("SQL stmt:" + sql);
 
@@ -174,40 +181,4 @@ public class DAOTablaVideos {
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-
-	/**
-	 * Método que busca el/los videos mas alquilados.
-	 * @return Arraylist con los videos encontrados
-	 * @throws SQLException - Cualquier error que la base de datos arroje.
-	 * @throws Exception - Cualquier error que no corresponda a la base de datos
-	 */
-	public ArrayList<Video> darVideoMasAlquilado()  throws SQLException, Exception {
-		ArrayList<Video> videos = new ArrayList<Video>();
-
-		String sql = "SELECT * " +
-					 "FROM ISIS2304MO11620.VIDEOS " +
-				     "WHERE ISIS2304MO11620.VIDEOS.ID IN (SELECT VIDEO_ID " +
-				                         "FROM ALQUILERES " +
-				                         "GROUP BY VIDEO_ID " +
-				                         "HAVING COUNT(*) = (SELECT MAX(COUNT(*)) " +
-				                                            "FROM ALQUILERES " +
-				                                            "GROUP BY VIDEO_ID)) ";
-
-		System.out.println("SQL stmt:" + sql);
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs = prepStmt.executeQuery();
-
-		while (rs.next()) {
-			String name = rs.getString("NAME");
-			int id = Integer.parseInt(rs.getString("ID"));
-			int duration = Integer.parseInt(rs.getString("DURATION"));
-			videos.add(new Video(id, name, duration));
-		}
-
-		return videos;
-	}
-
-
 }

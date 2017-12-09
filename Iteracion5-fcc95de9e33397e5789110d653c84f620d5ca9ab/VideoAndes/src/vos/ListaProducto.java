@@ -17,36 +17,36 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Clase que representa una arreglo de Video
  * @author Juan
  */
-public class ListaVideos {
+public class ListaProducto {
 	
 	/**
 	 * List con los videos
 	 */
-	@JsonProperty(value="videos")
-	private List<Video> videos;
+	@JsonProperty(value="productos")
+	private List<Producto> producto;
 	
 	/**
 	 * Constructor de la clase ListaVideos
 	 * @param videos - videos para agregar al arreglo de la clase
 	 */
-	public ListaVideos( @JsonProperty(value="videos")List<Video> videos){
-		this.videos = videos;
+	public ListaProducto( @JsonProperty(value="productos")List<Producto> producto){
+		this.producto = producto;
 	}
 
 	/**
 	 * Método que retorna la lista de videos
 	 * @return  List - List con los videos
 	 */
-	public List<Video> getVideos() {
-		return videos;
+	public List<Producto> getProductos() {
+		return producto;
 	}
 
 	/**
 	 * Método que asigna la lista de videos que entra como parametro
 	 * @param  videos - List con los videos ha agregar
 	 */
-	public void setVideo(List<Video> videos) {
-		this.videos = videos;
+	public void setProducto(List<Producto> productos) {
+		this.producto = productos;
 	}
 	
 }

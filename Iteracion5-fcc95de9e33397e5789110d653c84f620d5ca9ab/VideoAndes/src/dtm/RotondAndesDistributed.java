@@ -8,21 +8,22 @@ import javax.naming.NamingException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
-import jms.AllVideosMDB;
+
+import jms.AllProductosMDB;
 import jms.NonReplyException;
 import tm.RotondAndesMaster;
-import vos.ListaVideos;
+import vos.ListaProducto;
 
 public class RotondAndesDistributed extends BaseDTM{
 	private static RotondAndesDistributed instance;
-	private AllVideosMDB allVideosMQ;
+	private AllProductosMDB allProductosMQ;
 
 	private RotondAndesDistributed() throws NamingException, JMSException
 	{
 		InitialContext ctx = new InitialContext();
 		factory = (RMQConnectionFactory) ctx.lookup(MQ_CONNECTION_NAME);
-		allVideosMQ = new AllVideosMDB(factory, ctx);
-		addMBD(allVideosMQ);
+		allProductosMQ = new AllProductosMDB(factory, ctx);
+		addMBD(allProductosMQ);
 		start();
 	}
 	
@@ -53,13 +54,13 @@ public class RotondAndesDistributed extends BaseDTM{
 		return getInstance(tm);
 	}
 	
-	public ListaVideos getLocalVideos() throws Exception
+	public ListaProducto getLocalProductos() throws Exception
 	{
-		return tm.darVideosLocal();
+		return tm.darProductosLocal();
 	}
 	
-	public ListaVideos getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public ListaProducto getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
-		return allVideosMQ.getRemoteVideos();
+		return allProductosMQ.getRemoteProductos();
 	}
 }

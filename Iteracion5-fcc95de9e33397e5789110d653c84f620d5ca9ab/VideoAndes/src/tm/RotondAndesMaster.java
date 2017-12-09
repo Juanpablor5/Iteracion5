@@ -12,11 +12,12 @@ package tm;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import dao.DAOTablaVideos;
+
+import dao.DAOTablaProducto;
 import dtm.RotondAndesDistributed;
 import jms.NonReplyException;
-import vos.Video;
-import vos.ListaVideos;
+import vos.ListaProducto;
+import vos.Producto;
 
 /**
  * @author Juan
@@ -35,14 +36,14 @@ public class RotondAndesMaster extends baseTM {
 	///////Transacciones////////////////////
 	////////////////////////////////////////
 	
-	public ListaVideos darVideosLocal() throws Exception {
-		ArrayList<Video> videos;
-		DAOTablaVideos daoVideos = new DAOTablaVideos();
+	public ListaProducto darProductosLocal() throws Exception {
+		ArrayList<Producto> videos;
+		DAOTablaProducto daoVideos = new DAOTablaProducto();
 		try 
 		{
 			this.conn = darConexion();
 			daoVideos.setConn(conn);
-			videos = daoVideos.darVideos();
+			videos = daoVideos.darProductos();
 
 		} catch (SQLException e) {
 			System.err.println("SQLException:" + e.getMessage());
@@ -63,7 +64,7 @@ public class RotondAndesMaster extends baseTM {
 				throw exception;
 			}
 		}
-		return new ListaVideos(videos);
+		return new ListaProducto(videos);
 	}
 
 	/**
@@ -71,13 +72,13 @@ public class RotondAndesMaster extends baseTM {
 	 * @return ListaVideos - objeto que modela  un arreglo de videos. este arreglo contiene el resultado de la búsqueda
 	 * @throws Exception -  cualquier error que se genere durante la transacción
 	 */
-	public ListaVideos darVideos() throws Exception {
-		ListaVideos remL = darVideosLocal();
+	public ListaProducto darProductos() throws Exception {
+		ListaProducto remL = darProductosLocal();
 		try
 		{
-			ListaVideos resp = dtm.getRemoteVideos();
-			System.out.println(resp.getVideos().size());
-			remL.getVideos().addAll(resp.getVideos());
+			ListaProducto resp = dtm.getRemoteVideos();
+			System.out.println(resp.getProductos().size());
+			remL.getProductos().addAll(resp.getProductos());
 		}
 		catch(NonReplyException e)
 		{

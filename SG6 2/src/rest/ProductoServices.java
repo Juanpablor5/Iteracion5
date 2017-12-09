@@ -14,11 +14,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import em.Check;
 import tm.RotondAndesException;
 import tm.RotondAndesTM;
+import vos.Filtro;
 import vos.Ingrediente;
 import vos.Producto;
 import vos.ProductoDetail;
+import vos.Productoi;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,17 +32,19 @@ public class ProductoServices extends BaseServices implements URLS {
 	}
 
 	@GET
-	public Response getAll(@PathParam(USUARIOID) Long idUser) {
+	public Response getAll() {
 		RotondAndesTM tm = new RotondAndesTM(getPath());
-		List<Producto> zona;
+		List<Productoi> producto;
+		Filtro[] filtros = null;
+		Check[] checks = null;
 		try {
-			zona = tm.getAllProducto(idUser);
+			producto = tm.darproductos(filtros, checks);
 		} catch (RotondAndesException ex) {
 			return Response.status(404).entity(doErrorMessage(ex)).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
-		return Response.status(200).entity(zona).build();
+		return Response.status(200).entity(producto).build();
 	}
 
 	@GET

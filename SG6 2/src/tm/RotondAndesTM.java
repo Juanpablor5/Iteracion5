@@ -1,10 +1,12 @@
 package tm;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import vos.*;
 import dao.*;
+import em.Check;
 
 public class RotondAndesTM extends baseTM {
 	/**
@@ -1371,5 +1373,37 @@ public class RotondAndesTM extends baseTM {
 			closeConection();
 		}
 		return data;
+	}
+	
+	public ListaProductosI darProductosLocal(Filtro[] filtros, Check... checks) throws Exception {
+		List<Productoi> producto;
+		DAOProducto daoProducto = new DAOProducto(conn);
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			daoProducto.setConn(conn);
+			producto = daoProducto.rf13(filtros, checks);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoProducto.close();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaProductosI(producto);
 	}
 }

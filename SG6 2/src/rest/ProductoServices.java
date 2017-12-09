@@ -19,6 +19,7 @@ import tm.RotondAndesException;
 import tm.RotondAndesTM;
 import vos.Filtro;
 import vos.Ingrediente;
+import vos.ListaProductosI;
 import vos.Producto;
 import vos.ProductoDetail;
 import vos.Productoi;
@@ -34,9 +35,9 @@ public class ProductoServices extends BaseServices implements URLS {
 	@GET
 	public Response getAll() {
 		RotondAndesTM tm = new RotondAndesTM(getPath());
-		List<Productoi> producto;
-		Filtro[] filtros = null;
-		Check[] checks = null;
+		ListaProductosI producto;
+		Filtro[] filtros = new Filtro[0];
+		Check[] checks = new Check[0];
 		try {
 			producto = tm.darproductos(filtros, checks);
 		} catch (RotondAndesException ex) {

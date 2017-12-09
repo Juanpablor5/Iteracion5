@@ -72,13 +72,15 @@ public class DAOTablaProducto {
 	/**
 	 * Método que, usando la conexión a la base de datos, saca todos los videos de la base de datos
 	 * <b>SQL Statement:</b> SELECT * FROM VIDEOS;
+	 * @param string 
 	 * @return Arraylist con los videos de la base de datos.
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Producto> darProductos() throws SQLException, Exception {
+	public ArrayList<Producto> darProductos(String string) throws SQLException, Exception {
 		
 		ArrayList<Producto> productos = new ArrayList<Producto>();
+		System.out.println("========"+string);
 		productos.add(new Producto(20, "Prueba 2", "Desc", "Trad", 20.0));
 		return productos;
 	}

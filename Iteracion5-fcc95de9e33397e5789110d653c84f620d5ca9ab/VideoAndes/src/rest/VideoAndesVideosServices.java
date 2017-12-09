@@ -18,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import tm.RotondAndesMaster;
 import vos.ListaProducto;
+import vos.RentabilidadList;
 
 /**
  * Clase que expone servicios REST con ruta base: http://"ip o nombre de host":8080/VideoAndes/rest/videos/...
@@ -65,15 +67,43 @@ public class VideoAndesVideosServices {
      * el error que se produjo
 	 */
 	@GET
+	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getProductos() {
+	public Response getProductos(@PathParam("id") String string) {
 		RotondAndesMaster tm = new RotondAndesMaster(getPath());
 		ListaProducto videos;
 		try {
-			videos = tm.darProductos();
+			videos = tm.darProductos(string);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(videos).build();
+	}
+	
+	@DELETE
+	@Path("/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response deleteRestaurante(@PathParam("id") long idRest) {
+		RotondAndesMaster tm = new RotondAndesMaster(getPath());
+		try {
+			tm.deleteRestaurante(idRest);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).build();
+	}
+	
+	@GET
+	@Path("rentabilidad/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getRentabilidad(@PathParam("id") String string) {
+		RotondAndesMaster tm = new RotondAndesMaster(getPath());
+		RentabilidadList rentabilidad;
+		try {
+			rentabilidad = tm.darRentabilidad(string);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(rentabilidad).build();
 	}
 }

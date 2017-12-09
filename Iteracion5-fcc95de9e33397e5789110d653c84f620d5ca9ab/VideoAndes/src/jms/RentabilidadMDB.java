@@ -29,20 +29,22 @@ import dtm.RotondAndesDistributed;
 import vos.ExchangeMsg;
 import vos.ListaProducto;
 import vos.Producto;
+import vos.Rentabilidad;
+import vos.RentabilidadList;
 
 
-public class AllProductosMDB implements MBD{	
-	private final static String GLOBAL_TOPIC_NAME = "java:global/RMQTopicAllProductos";
-	private final static String LOCAL_TOPIC_NAME = "java:global/RMQAllProductosLocal";
+public class RentabilidadMDB implements MBD{	
+	private final static String GLOBAL_TOPIC_NAME = "java:global/RMQTopicRentabilidad";
+	private final static String LOCAL_TOPIC_NAME = "java:global/RMQTopicRentabilidadLocal";
 	
 	private TopicConnection topicConnection;
 	private TopicSession topicSession;
 	private Topic globalTopic;
 	private Topic localTopic;
 	
-	private List<Producto> answer = new ArrayList<Producto>();
+	private List<Rentabilidad> answer = new ArrayList<Rentabilidad>();
 	
-	public AllProductosMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
+	public RentabilidadMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
 	{	
 		topicConnection = factory.createTopicConnection();
 		topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -66,7 +68,7 @@ public class AllProductosMDB implements MBD{
 		topicConnection.close();
 	}
 	
-	public ListaProducto getRemoteProductos(String mensaje) throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public RentabilidadList getRentabilidadList(String fechas) throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		answer.clear();
 		String id = APP+""+System.currentTimeMillis();
@@ -74,7 +76,7 @@ public class AllProductosMDB implements MBD{
 		id = DatatypeConverter.printHexBinary(md.digest(id.getBytes())).substring(0, 8);
 //		id = new String(md.digest(id.getBytes()));
 		
-		sendMessage(mensaje, REQUEST, globalTopic, id);
+		sendMessage(fechas, REQUEST, globalTopic, id);
 		boolean waiting = true;
 
 		int count = 0;
@@ -92,7 +94,7 @@ public class AllProductosMDB implements MBD{
 		
 		if(answer.isEmpty())
 			throw new NonReplyException("Non Response");
-		ListaProducto res = new ListaProducto(answer);
+		RentabilidadList res = new RentabilidadList(answer);
         return res;
 	}
 	
@@ -101,7 +103,7 @@ public class AllProductosMDB implements MBD{
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		System.out.println(id);
-		ExchangeMsg msg = new ExchangeMsg("Productos.general."+APP, APP, payload, status, id);
+		ExchangeMsg msg = new ExchangeMsg("Rentabilidad.general."+APP, APP, payload, status, id);
 		TopicPublisher topicPublisher = topicSession.createPublisher(dest);
 		topicPublisher.setDeliveryMode(DeliveryMode.PERSISTENT);
 		TextMessage txtMsg = topicSession.createTextMessage();
@@ -123,7 +125,7 @@ public class AllProductosMDB implements MBD{
 			ObjectMapper mapper = new ObjectMapper();
 			ExchangeMsg ex = mapper.readValue(body, ExchangeMsg.class);
 			String id = ex.getMsgId();
-			System.out.println("PRODUCTOS");
+			System.out.println("RENTABILIDAD");
 			System.out.println(ex.getSender());
 			System.out.println(ex.getStatus());
 			if(!ex.getSender().equals(APP))
@@ -132,15 +134,15 @@ public class AllProductosMDB implements MBD{
 				{
 					RotondAndesDistributed dtm = RotondAndesDistributed.getInstance();
 					System.err.println(ex.getPayload());
-					ListaProducto productos = dtm.getLocalProductos(ex.getPayload());
-					String payload = mapper.writeValueAsString(productos);
-					Topic t = new RMQDestination("", "Productos.test", ex.getRoutingKey(), "", false);
+					RentabilidadList rentabilidad = dtm.getRentabilidadLocal(ex.getPayload());
+					String payload = mapper.writeValueAsString(rentabilidad);
+					Topic t = new RMQDestination("", "Rentabilidad.test", ex.getRoutingKey(), "", false);
 					sendMessage(payload, REQUEST_ANSWER, t, id);
 				}
 				else if(ex.getStatus().equals(REQUEST_ANSWER))
 				{
-					ListaProducto v = mapper.readValue(ex.getPayload(), ListaProducto.class);
-					answer.addAll(v.getProductos());
+					RentabilidadList v = mapper.readValue(ex.getPayload(), RentabilidadList.class);
+					answer.addAll(v.getRentabilidad());
 				}
 			}
 			

@@ -10,20 +10,29 @@ import org.codehaus.jackson.map.JsonMappingException;
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 
 import jms.AllProductosMDB;
+import jms.AllRestaurantesMDB;
 import jms.NonReplyException;
+import jms.RentabilidadMDB;
 import tm.RotondAndesMaster;
 import vos.ListaProducto;
+import vos.RentabilidadList;
 
 public class RotondAndesDistributed extends BaseDTM{
 	private static RotondAndesDistributed instance;
 	private AllProductosMDB allProductosMQ;
+	private AllRestaurantesMDB allRestaurantesMQ;
+	private RentabilidadMDB allRentabilidadMQ;
 
 	private RotondAndesDistributed() throws NamingException, JMSException
 	{
 		InitialContext ctx = new InitialContext();
 		factory = (RMQConnectionFactory) ctx.lookup(MQ_CONNECTION_NAME);
 		allProductosMQ = new AllProductosMDB(factory, ctx);
+		allRestaurantesMQ = new AllRestaurantesMDB(factory, ctx);
+		allRentabilidadMQ = new RentabilidadMDB(factory, ctx);
 		addMBD(allProductosMQ);
+		addMBD(allRestaurantesMQ);
+		addMBD(allRentabilidadMQ);
 		start();
 	}
 	
@@ -54,13 +63,32 @@ public class RotondAndesDistributed extends BaseDTM{
 		return getInstance(tm);
 	}
 	
-	public ListaProducto getLocalProductos() throws Exception
+	public ListaProducto getLocalProductos(String string) throws Exception
 	{
-		return tm.darProductosLocal();
+		return tm.darProductosLocal(string);
 	}
 	
-	public ListaProducto getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public ListaProducto getRemoteProductos(String string) throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
-		return allProductosMQ.getRemoteProductos();
+		return allProductosMQ.getRemoteProductos(string);
+	}
+
+	public void deleteLocalRestaurante(long parseLong) throws Exception {
+		tm.deleteLocalRestaurante(parseLong);
+	}
+
+	public void deleteRemoteRestaurante(long idRestaurante) throws JsonGenerationException, JsonMappingException, NoSuchAlgorithmException, JMSException, IOException, NonReplyException, InterruptedException{
+		// TODO Auto-generated method stub
+		allRestaurantesMQ.getRemoteRestaurantes(idRestaurante);
+	}
+
+	public RentabilidadList getRentabilidadLocal(String payload) throws Exception {
+		// TODO Auto-generated method stub
+		return tm.getLocalRentabilidad(payload);
+	}
+
+	public RentabilidadList getRemoteRentabilidad(String fecha) throws JsonGenerationException, JsonMappingException, NoSuchAlgorithmException, JMSException, IOException, NonReplyException, InterruptedException {
+		// TODO Auto-generated method stub
+		return allRentabilidadMQ.getRentabilidadList(fecha);
 	}
 }

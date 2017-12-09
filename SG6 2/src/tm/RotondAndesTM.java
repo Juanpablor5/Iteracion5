@@ -1376,14 +1376,13 @@ public class RotondAndesTM extends baseTM {
 		return data;
 	}
 	
-	public ListaProductosI darProductosLocal(Long idUser, Filtro[] filtros, Check... checks) throws Exception {
+	public ListaProductosI darProductosLocal(Filtro[] filtros, Check[] checks) throws Exception {
 		List<Productoi> data = null;
 		updateConnection();
 		try (DAOProducto daos = new DAOProducto(conn)) {
 			// ------------------------
 			// START
 			// ------------------------
-			isPermiso(idUser, 3, 2);
 			data = daos.rf13(filtros, checks);
 			conn.commit();
 			// ------------------------
@@ -1402,8 +1401,8 @@ public class RotondAndesTM extends baseTM {
 	 * @return ListaVideos - objeto que modela  un arreglo de videos. este arreglo contiene el resultado de la búsqueda
 	 * @throws Exception -  cualquier error que se genere durante la transacción
 	 */
-	public ListaVideos darVideos() throws Exception {
-		ListaVideos remL = darVideosLocal();
+	public ListaProductosI darproductos(Filtro[] filtros, Check[] checks) throws Exception {
+		ListaProductosI remL = darproductos(filtros, checks);
 		try
 		{
 			ListaVideos resp = dtm.getRemoteVideos();

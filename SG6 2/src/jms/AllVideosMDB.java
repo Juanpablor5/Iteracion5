@@ -11,13 +11,7 @@ import javax.jms.DeliveryMode;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
@@ -34,14 +28,11 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
-import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import com.rabbitmq.jms.admin.RMQDestination;
-
 import dtm.VideoAndesDistributed;
 import vos.ExchangeMsg;
-import vos.ListaVideos;
-import vos.Video;
+import vos.ListaProductosI;
+import vos.Productoi;
 
 
 public class AllVideosMDB implements MessageListener, ExceptionListener 
@@ -60,7 +51,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 	private Topic globalTopic;
 	private Topic localTopic;
 	
-	private List<Video> answer = new ArrayList<Video>();
+	private List<Productoi> answer = new ArrayList<Productoi>();
 	
 	public AllVideosMDB(TopicConnectionFactory factory, InitialContext ctx) throws JMSException, NamingException 
 	{	
@@ -86,7 +77,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 		topicConnection.close();
 	}
 	
-	public ListaVideos getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public ListaProductosI getRemoteVideos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		answer.clear();
 		String id = APP+""+System.currentTimeMillis();
@@ -112,7 +103,7 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 		
 		if(answer.isEmpty())
 			throw new NonReplyException("Non Response");
-		ListaVideos res = new ListaVideos(answer);
+		ListaProductosI res = new ListaProductosI(answer);
         return res;
 	}
 	
@@ -150,14 +141,14 @@ public class AllVideosMDB implements MessageListener, ExceptionListener
 				if(ex.getStatus().equals(REQUEST))
 				{
 					VideoAndesDistributed dtm = VideoAndesDistributed.getInstance();
-					ListaVideos videos = dtm.getLocalVideos();
+					ListaProductosI videos = dtm.getLocalProductos();
 					String payload = mapper.writeValueAsString(videos);
 					Topic t = new RMQDestination("", "Productos.test", ex.getRoutingKey(), "", false);
 					sendMessage(payload, REQUEST_ANSWER, t, id);
 				}
 				else if(ex.getStatus().equals(REQUEST_ANSWER))
 				{
-					ListaVideos v = mapper.readValue(ex.getPayload(), ListaVideos.class);
+					ListaProductosI v = mapper.readValue(ex.getPayload(), ListaProductosI.class);
 					answer.addAll(v.getVideos());
 				}
 			}

@@ -7,6 +7,7 @@ import java.util.List;
 import vos.*;
 import dao.*;
 import em.Check;
+import jms.NonReplyException;
 
 public class RotondAndesTM extends baseTM {
 	/**
@@ -1375,7 +1376,7 @@ public class RotondAndesTM extends baseTM {
 		return data;
 	}
 	
-	public ListaProductosI darProductosLocal(Filtro[] filtros, Check... checks) throws Exception {
+	public ListaProductosI darProductosLocal(Filtro[] filtros, Check ... checks) throws Exception {
 		List<Productoi> producto;
 		DAOProducto daoProducto = new DAOProducto(conn);
 		try 
@@ -1405,5 +1406,25 @@ public class RotondAndesTM extends baseTM {
 			}
 		}
 		return new ListaProductosI(producto);
+	}
+	
+	/**
+	 * Método que modela la transacción que retorna todos los videos de la base de datos.
+	 * @return ListaVideos - objeto que modela  un arreglo de videos. este arreglo contiene el resultado de la búsqueda
+	 * @throws Exception -  cualquier error que se genere durante la transacción
+	 */
+	public ListaVideos darVideos() throws Exception {
+		ListaVideos remL = darVideosLocal();
+		try
+		{
+			ListaVideos resp = dtm.getRemoteVideos();
+			System.out.println(resp.getVideos().size());
+			remL.getVideos().addAll(resp.getVideos());
+		}
+		catch(NonReplyException e)
+		{
+			
+		}
+		return remL;
 	}
 }

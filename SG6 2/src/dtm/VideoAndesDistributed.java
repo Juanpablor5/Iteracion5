@@ -23,9 +23,12 @@ import org.codehaus.jackson.map.JsonMappingException;
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import com.rabbitmq.jms.admin.RMQDestination;
 
+import em.Check;
 import jms.AllVideosMDB;
 import jms.NonReplyException;
-import tm.VideoAndesMaster;
+import tm.RotondAndesTM;
+import vos.Filtro;
+import vos.ListaProductosI;
 import vos.Producto;
 
 public class VideoAndesDistributed 
@@ -34,7 +37,7 @@ public class VideoAndesDistributed
 	
 	private static VideoAndesDistributed instance;
 	
-	private VideoAndesMaster tm;
+	private RotondAndesTM tm;
 	
 	private TopicConnectionFactory factory;
 	
@@ -66,7 +69,7 @@ public class VideoAndesDistributed
 		path = p;
 	}
 	
-	public void setUpTransactionManager(VideoAndesMaster tm)
+	public void setUpTransactionManager(RotondAndesTM tm)
 	{
 	   this.tm = tm;
 	}
@@ -76,7 +79,7 @@ public class VideoAndesDistributed
 		return instance;
 	}
 	
-	public static VideoAndesDistributed getInstance(VideoAndesMaster tm)
+	public static VideoAndesDistributed getInstance(RotondAndesTM tm)
 	{
 		if(instance == null)
 		{
@@ -97,23 +100,23 @@ public class VideoAndesDistributed
 	{
 		if(instance == null)
 		{
-			VideoAndesMaster tm = new VideoAndesMaster(path);
+			RotondAndesTM tm = new RotondAndesTM(path);
 			return getInstance(tm);
 		}
 		if(instance.tm != null)
 		{
 			return instance;
 		}
-		VideoAndesMaster tm = new VideoAndesMaster(path);
+		RotondAndesTM tm = new RotondAndesTM(path);
 		return getInstance(tm);
 	}
 	
-	public List<Producto> getLocalProductos() throws Exception
+	public ListaProductosI getLocalProductos(Filtro[] filtros, Check[] checks) throws Exception
 	{
-		return tm.darVideosLocal();
+		return tm.darProductosLocal(filtros, checks);
 	}
 	
-	public List<Producto> getRemoteProductos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
+	public ListaProductosI getRemoteProductos() throws JsonGenerationException, JsonMappingException, JMSException, IOException, NonReplyException, InterruptedException, NoSuchAlgorithmException
 	{
 		return allVideosMQ.getRemoteVideos();
 	}

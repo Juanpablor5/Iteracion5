@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
 public class baseTM {
 	/**
 	 * Atributo estatico que contiene el path relativo del archivo que tiene los

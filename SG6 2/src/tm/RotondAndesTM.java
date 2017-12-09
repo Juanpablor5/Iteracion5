@@ -6,10 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import vos.*;
 import dao.*;
+import dtm.VideoAndesDistributed;
 import em.Check;
 import jms.NonReplyException;
 
 public class RotondAndesTM extends baseTM {
+	private VideoAndesDistributed dtm;
+	
 	/**
 	 * Metodo constructor de la clase VideoAndesMaster, esta clase modela y contiene
 	 * cada una de las Transacciónes y la logica de negocios que estas conllevan.
@@ -22,6 +25,7 @@ public class RotondAndesTM extends baseTM {
 	 */
 	public RotondAndesTM(String contextPathP) {
 		setConectionDataPath(contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE);
+		dtm = VideoAndesDistributed.getInstance(this);
 		initConnectionData();
 	}
 
@@ -1405,7 +1409,7 @@ public class RotondAndesTM extends baseTM {
 		ListaProductosI remL = darproductos(filtros, checks);
 		try
 		{
-			ListaVideos resp = dtm.getRemoteVideos();
+			ListaProductosI resp = dtm.getRemoteProductos();
 			System.out.println(resp.getVideos().size());
 			remL.getVideos().addAll(resp.getVideos());
 		}

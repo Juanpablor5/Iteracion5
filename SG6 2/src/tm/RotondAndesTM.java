@@ -1375,35 +1375,24 @@ public class RotondAndesTM extends baseTM {
 		return data;
 	}
 	
-	public ListaProductosI darProductosLocal(Filtro[] filtros, Check... checks) throws Exception {
-		List<Productoi> producto;
-		DAOProducto daoProducto = new DAOProducto(conn);
-		try 
-		{
-			//////Transacción
-			this.conn = darConexion();
-			daoProducto.setConn(conn);
-			producto = daoProducto.rf13(filtros, checks);
-
+	public ListaProductosI darProductosLocal(Long idUser, Filtro[] filtros, Check... checks) throws Exception {
+		List<Productoi> data = null;
+		updateConnection();
+		try (DAOProducto daos = new DAOProducto(conn)) {
+			// ------------------------
+			// START
+			// ------------------------
+			isPermiso(idUser, 3, 2);
+			data = daos.rf13(filtros, checks);
+			conn.commit();
+			// ------------------------
+			// END
+			// ------------------------
 		} catch (SQLException e) {
-			System.err.println("SQLException:" + e.getMessage());
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			System.err.println("GeneralException:" + e.getMessage());
-			e.printStackTrace();
-			throw e;
+			sqlException(e);
 		} finally {
-			try {
-				daoProducto.close();
-				if(this.conn!=null)
-					this.conn.close();
-			} catch (SQLException exception) {
-				System.err.println("SQLException closing resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
+			closeConection();
 		}
-		return new ListaProductosI(producto);
+		return (ListaProductosI) data;
 	}
 }

@@ -1,15 +1,4 @@
-/**-------------------------------------------------------------------
- * $Id$
- * Universidad de los Andes (Bogotá - Colombia)
- * Departamento de Ingeniería de Sistemas y Computación
- *
- * Materia: Sistemas Transaccionales
- * Ejercicio: VideoAndes
- * Autor: Juan Felipe García - jf.garcia268@uniandes.edu.co
- * -------------------------------------------------------------------
- */
 package dao;
-
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,16 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import oracle.net.aso.p;
 import vos.Producto;
+import vos.Rentabilidad;
 
-/**
- * Clase DAO que se conecta la base de datos usando JDBC para resolver los requerimientos de la aplicación
- * @author Juan
- */
-public class DAOTablaProducto {
-
-
+public class DAODistributed {
+	
 	/**
 	 * Arraylits de recursos que se usan para la ejecución de sentencias SQL
 	 */
@@ -41,7 +25,7 @@ public class DAOTablaProducto {
 	 * Método constructor que crea DAOVideo
 	 * <b>post: </b> Crea la instancia del DAO e inicializa el Arraylist de recursos
 	 */
-	public DAOTablaProducto() {
+	public DAODistributed() {
 		recursos = new ArrayList<Object>();
 	}
 
@@ -68,7 +52,30 @@ public class DAOTablaProducto {
 		this.conn = con;
 	}
 
+    // -----------------------------------------------------------------
+    // RENTABILIDAD
+    // -----------------------------------------------------------------
 
+	/**
+	 * Método que, usando la conexión a la base de datos, saca todos los videos de la base de datos
+	 * <b>SQL Statement:</b> SELECT * FROM VIDEOS;
+	 * @param string 
+	 * @return Arraylist con los videos de la base de datos.
+	 * @throws SQLException - Cualquier error que la base de datos arroje.
+	 * @throws Exception - Cualquier error que no corresponda a la base de datos
+	 */
+	public ArrayList<Rentabilidad> darRentabilidad(String string) throws SQLException, Exception {
+		
+		ArrayList<Rentabilidad> productos = new ArrayList<Rentabilidad>();
+		System.out.println("(rent)========"+string);
+		productos.add(new Rentabilidad("Prueba 2", "Categoria", "Producto", 2, 5.0));
+		return productos;
+	}
+
+    // -----------------------------------------------------------------
+    // PRODUCTO
+    // -----------------------------------------------------------------
+	
 	/**
 	 * Método que, usando la conexión a la base de datos, saca todos los videos de la base de datos
 	 * <b>SQL Statement:</b> SELECT * FROM VIDEOS;
@@ -182,5 +189,13 @@ public class DAOTablaProducto {
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
+	}
+	
+    // -----------------------------------------------------------------
+    // RESTAURANTE
+    // -----------------------------------------------------------------
+	
+	public void deleteRestaurante(long idRestaurante) throws SQLException, Exception {
+		System.out.println(idRestaurante+"========================");
 	}
 }

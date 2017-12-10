@@ -13,9 +13,7 @@ package tm;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.DAORentabilidad;
-import dao.DAOTablaProducto;
-import dao.DAOTablaRestaurante;
+import dao.DAODistributed;
 import dtm.RotondAndesDistributed;
 import jms.NonReplyException;
 import vos.ListaProducto;
@@ -42,7 +40,7 @@ public class RotondAndesMaster extends baseTM {
 	
 	public ListaProducto darProductosLocal(String string) throws Exception {
 		ArrayList<Producto> videos;
-		DAOTablaProducto daoVideos = new DAOTablaProducto();
+		DAODistributed daoVideos = new DAODistributed();
 		try 
 		{
 			this.conn = darConexion();
@@ -92,7 +90,7 @@ public class RotondAndesMaster extends baseTM {
 	}
 
 	public void deleteLocalRestaurante(long parseLong) throws Exception {
-		DAOTablaRestaurante daoRestaurantes = new DAOTablaRestaurante();
+		DAODistributed daoRestaurantes = new DAODistributed();
 		try 
 		{
 			this.conn = darConexion();
@@ -135,7 +133,7 @@ public class RotondAndesMaster extends baseTM {
 
 	public RentabilidadList getLocalRentabilidad(String payload) throws Exception {
 		ArrayList<Rentabilidad> rentabilidad;
-		DAORentabilidad daoRentabilidad = new DAORentabilidad();
+		DAODistributed daoRentabilidad = new DAODistributed();
 		try 
 		{
 			this.conn = darConexion();

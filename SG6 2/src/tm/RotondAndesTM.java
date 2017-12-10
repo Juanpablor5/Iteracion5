@@ -1,18 +1,12 @@
 package tm;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import vos.*;
 import dao.*;
-import dtm.VideoAndesDistributed;
-import em.Check;
-import jms.NonReplyException;
 
 public class RotondAndesTM extends baseTM {
-	private VideoAndesDistributed dtm;
-	
 	/**
 	 * Metodo constructor de la clase VideoAndesMaster, esta clase modela y contiene
 	 * cada una de las Transacci�nes y la logica de negocios que estas conllevan.
@@ -25,7 +19,6 @@ public class RotondAndesTM extends baseTM {
 	 */
 	public RotondAndesTM(String contextPathP) {
 		setConectionDataPath(contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE);
-		dtm = VideoAndesDistributed.getInstance(this);
 		initConnectionData();
 	}
 
@@ -1378,45 +1371,5 @@ public class RotondAndesTM extends baseTM {
 			closeConection();
 		}
 		return data;
-	}
-	
-	public ListaProductosI darProductosLocal(Filtro[] filtros, Check[] checks) throws Exception {
-		List<Productoi> data = null;
-		updateConnection();
-		try (DAOProducto daos = new DAOProducto(conn)) {
-			// ------------------------
-			// START
-			// ------------------------
-			data = daos.rf13(filtros, checks);
-			conn.commit();
-			// ------------------------
-			// END
-			// ------------------------
-		} catch (SQLException e) {
-			sqlException(e);
-		} finally {
-			closeConection();
-		}
-		return (ListaProductosI) data;
-	}
-	
-	/**
-	 * Método que modela la transacción que retorna todos los videos de la base de datos.
-	 * @return ListaVideos - objeto que modela  un arreglo de videos. este arreglo contiene el resultado de la búsqueda
-	 * @throws Exception -  cualquier error que se genere durante la transacción
-	 */
-	public ListaProductosI darproductos(Filtro[] filtros, Check[] checks) throws Exception {
-		ListaProductosI remL = darproductos(filtros, checks);
-		try
-		{
-			ListaProductosI resp = dtm.getRemoteProductos();
-			System.out.println(resp.getVideos().size());
-			remL.getVideos().addAll(resp.getVideos());
-		}
-		catch(NonReplyException e)
-		{
-			
-		}
-		return remL;
 	}
 }

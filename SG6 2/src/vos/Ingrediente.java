@@ -8,7 +8,7 @@ import em.Tabla;
 import em.Columna.SISTRANS_Columna;
 import em.Id.SISTRANS_Id;
 import em.Many.ManytoMany;
-import jdk.nashorn.internal.ir.annotations.Reference;
+import em.Reference;
 
 /**
  * Clase que representa un Ingrediente.

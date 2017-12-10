@@ -6,13 +6,13 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import dtm.VideoAndesDistributed;
+import dtm.RotondAndesDistributed;
 
 
 @WebListener
 public class ContextListener implements ServletContextListener {
 
-	private VideoAndesDistributed dtm;
+	private RotondAndesDistributed dtm;
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) 
@@ -30,8 +30,8 @@ public class ContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		
 		final ServletContext context = arg0.getServletContext();
-		VideoAndesDistributed.setPath(context.getRealPath("WEB-INF/ConnectionData"));
-		dtm = VideoAndesDistributed.getInstance();
+		RotondAndesDistributed.setPath(context.getRealPath("WEB-INF/ConnectionData"));
+		dtm = RotondAndesDistributed.getInstance();
 	}
 
 }
